@@ -1,7 +1,4 @@
----
-title: "Updating Post Model"
-slug: update-post-model
----
+# Updating Post Model
 
 In order for this model to work well with network requests, we will make it **decodable**. Making our model [decodable](https://developer.apple.com/documentation/foundation/archives_and_serialization/encoding_and_decoding_custom_types) means that we can take information from external resources (such as the Product Hunt API) and transform it into something that works with our models, like our `Post` model!
 
@@ -9,9 +6,8 @@ In order for this model to work well with network requests, we will make it **de
 
 First, let's add a variable for the preview image url:
 
-> [action]
-> Add previewImageUrl variable at the bottom of `Post` model located in the `Post.swift` file.
->
+Add previewImageUrl variable at the bottom of `Post` model located in the `Post.swift` file.
+
 ```swift
  ...
  let previewImageURL: URL
@@ -22,33 +18,27 @@ This will hold the link to the screenshot of the product and will allow us to do
 
 Next, let's make `Post` **decodable** by conforming to the `Decodable` protocol.
 
-> [action]
-> Create an `extension` at the bottom of your `Post` model that makes it `decodable`. We're extending it for ease of readability since we're going to be adding more code later.
->
+Create an `extension` at the bottom of your `Post` model that makes it `decodable`. We're extending it for ease of readability since we're going to be adding more code later.
+
 ```swift
 struct Post {
     // current code
 }
->
+
 // MARK: Decodable
 extension Post: Decodable {
->
+
 }
 ```
 
-<!-- -->
-
-> [info]
->
 > This tutorial describes `Decodable` at a high level. If you want to dive deeper into the inner workings of what's going on, Greg Heo's [JSON to Swift with Decoder and Decodable](https://swiftunboxed.com/stdlib/json-decoder-decodable/) article does a fantastic job of explaining the inner workings!
 
 # Add Coding Keys
 
 We'll need to define **coding keys** to tell Swift exactly where to find the information to fill the model's variables. However, we actually only need this because the Product Hunt API uses a different naming convention for it's properties.
 
-> [action]
-> Create an `enum` called `PostKeys` with the raw type as `String` and conforms to `CodingKey` and place it inside the `Post: Decodable` extension.
->
+Create an `enum` called `PostKeys` with the raw type as `String` and conforms to `CodingKey` and place it inside the `Post: Decodable` extension.
+
 ```swift
 extension Post: Decodable {
     // properties within a Post returned from the Product Hunt API that we want to extract the info from.
@@ -64,8 +54,8 @@ extension Post: Decodable {
     }
 }
 ```
->
-> ![Post Keys](assets/01_add-coding-keys_post-coding-keys.png)
+
+![Post Keys](assets/01_add-coding-keys_post-coding-keys.png)
 
 Note how `votesCount`, `commentsCount`, and `previewImageUrl` are the only variables that are set to a string. This is because in the JSON we receive from the request, these variables are named differently (using **snake_case**, rather than **camelCase** which is the recommended practice for Swift).
 
@@ -73,9 +63,8 @@ In fact, if we did not plan to collect these variables from the JSON, we would n
 
 Also, there are cases where you simply want to rename the property differently, such as for the `previewImageUrl`. We'll create a coding key for that as well and put it in our `Post: Decodable` extension:
 
-> [action]
-> Add a CodingKey for the preview image in the same file.
->
+Add a CodingKey for the preview image in the same file.
+
 ```swift
 enum PreviewImageURLKeys: String, CodingKey {
    // for all posts, we only want the 850px image
@@ -83,8 +72,8 @@ enum PreviewImageURLKeys: String, CodingKey {
    case imageURL = "850px"
 }
 ```
->
-> ![Preview Keys](assets/02_add-coding-keys_preview-coding-keys.png)
+
+![Preview Keys](assets/02_add-coding-keys_preview-coding-keys.png)
 
 # Initializing A Decodable
 
